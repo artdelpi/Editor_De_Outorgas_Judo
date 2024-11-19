@@ -69,7 +69,7 @@ def desenha_texto_centralizado(p1_coord: tuple, p2_coord: tuple, fonte: ImageFon
 
 def switch_template(path_to_template:str):
     """
-    Alterna emissor da outorga para Rafaello.
+    Alterna emissor da outorga para Joaquim.
 
     Args:
         path_to_template (str): Caminho do template a ser mascarado.
@@ -83,12 +83,12 @@ def switch_template(path_to_template:str):
     # Mascara nome do emissor
     draw.rectangle([523, 649, 778, 687], fill='white')
 
-    # Substitui nome do emissor para Rafaello
-    fonte_times = ImageFont.truetype('Timesbd.ttf', 12)
-    draw.text((520, 650), 'Rafaello Pinheiro Mazzoccante - Faixa Preta 2° Dan', fill='black', font=fonte_times)
+    # Substitui nome do emissor para Joaquim
+    fonte_times = ImageFont.truetype('timesbd.ttf', 12)
+    draw.text((520, 650), 'Joaquim Da Silva Porto Neto - Faixa Coral 7° Dan', fill='black', font=fonte_times)
     fonte_times = ImageFont.truetype('times.ttf', 10)
-    draw.text((565, 664), 'Cadastro Nacional Judô - AT039278/CBJ', fill='black', font=fonte_times)
-    draw.text((605, 674), 'CREF 009236-G/DF', fill='black', font=fonte_times)
+    draw.text((565, 664), 'Cadastro Nacional Judô - JU02R487/CBJ', fill='black', font=fonte_times)
+    draw.text((605, 674), 'CREF/5 013171-P/CE', fill='black', font=fonte_times)
 
     return image
 
@@ -136,6 +136,10 @@ def gerar_jpg(font_size: str, cor: str, nome_outorga: str, data_outorga: str, em
     # Abre o template
     image = Image.open(path_to_file)
 
+    # Aplica máscara
+    if emissor == 'Joaquim':
+        image = switch_template(path_to_file)
+
     # Gera o objeto Draw
     draw = ImageDraw.Draw(image)
 
@@ -150,10 +154,6 @@ def gerar_jpg(font_size: str, cor: str, nome_outorga: str, data_outorga: str, em
     # Salva a imagem na pasta 'imagens_geradas'
     output_path = os.path.join('imagens_geradas', f'{nome_outorga.upper()}.jpg')
     image.save(output_path)
-
-    # Se o emissor for Rafaello, aplica a máscara sobre o nome do emissor
-    if emissor == 'Rafaello':
-        switch_template(output_path).save(output_path)
 
     # Notifica o usuário em caso de geração manual
     if manual:
@@ -170,8 +170,8 @@ def retornar_selecoes() -> tuple:
     # Lida com seleção da Check List
     if (braulio_c1_variable.get() == 1):
         emissor = 'Bráulio'
-    elif (rafaello_c1_variable.get() == 1):
-        emissor = 'Rafaello'
+    elif (joaquim_c1_variable.get() == 1):
+        emissor = 'Joaquim'
 
     return (combo_fontes.get(), combo_cores.get(), 
             nome_outorga.get(), data_outorga.get(), 
@@ -195,8 +195,8 @@ def gerar_jpg_retransmitter():
 
 def desabilitar_checkboxes():
     if (braulio_c1_variable.get()) == 1:
-        rafaello_c1.deselect()
-    elif (rafaello_c1_variable.get()) == 1:
+        joaquim_c1.deselect()
+    elif (joaquim_c1_variable.get()) == 1:
         braulio_c1.deselect()
 
 
@@ -220,10 +220,10 @@ def importar_excel():
             # Decide emissor da outorga
             if braulio_c1_variable.get() == 1:
                 emissor = "Bráulio"
-            elif rafaello_c1_variable.get() == 1:
-                emissor = "Rafaello"
+            elif joaquim_c1_variable.get() == 1:
+                emissor = "Joaquim"
             else:
-                messagebox.showerror("Erro", "Selecione um assinante (Bráulio ou Rafaello).")
+                messagebox.showerror("Erro", "Selecione um assinante (Bráulio ou Joaquim).")
                 return
 
             # Obtém a data de outorga (usa a função que verifica a label)
@@ -294,15 +294,15 @@ if __name__ == "__main__":
                                 command=desabilitar_checkboxes)
     braulio_c1.place(x=145, y=92)
 
-    # CheckBox - Rafaello
-    rafaello_c1_variable = tk.IntVar()
-    rafaello_c1 = tk.Checkbutton(master=window, 
-                                text='Porto', 
-                                variable=rafaello_c1_variable,
+    # CheckBox - Joaquim
+    joaquim_c1_variable = tk.IntVar()
+    joaquim_c1 = tk.Checkbutton(master=window, 
+                                text='Joaquim', 
+                                variable=joaquim_c1_variable,
                                 onvalue=1,
                                 bg='gray',
                                 command=desabilitar_checkboxes)
-    rafaello_c1.place(x=210, y=92)
+    joaquim_c1.place(x=210, y=92)
 
     # ComboBox - Font Size
     font_sizes = [25, 30, 35]
