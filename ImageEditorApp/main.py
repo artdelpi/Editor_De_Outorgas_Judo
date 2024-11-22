@@ -93,9 +93,10 @@ def switch_template(path_to_template:str):
     return image
 
 
-def gerar_jpg(font_size: str, cor: str, nome_outorga: str, data_outorga: str, emissor: str, manual=True):
+def gerar_jpg(font_size: str='', cor: str='', nome_outorga: str='', data_outorga: str='', emissor: str='', manual=True):
     """
-    Gera diploma em formato .jpg na pasta 'imagens_geradas'.
+    Gera diploma em formato .jpg na pasta 'imagens_geradas'. Parâmetros opcionais permitem geração manual e automática
+    na mesma função.
 
     Args:
         font_size (str): Tamanho da fonte.
@@ -105,6 +106,12 @@ def gerar_jpg(font_size: str, cor: str, nome_outorga: str, data_outorga: str, em
         emissor (str): Nome do emissor.
         manual (bool): Indica se a geração foi manual (True) ou via importação de Excel (False).
     """
+    if manual:
+        # Obtém entradas de seleção
+        font_size, cor, nome_outorga, data_outorga, emissor = retornar_selecoes()
+
+        # Obtém a data do sys
+        data_outorga = obter_data_outorga()
 
     # Verifica a faixa selecionada e usa o template correspondente
     if cor == 'Branca (Ponta Cinza)':
@@ -176,21 +183,6 @@ def retornar_selecoes() -> tuple:
     return (combo_fontes.get(), combo_cores.get(), 
             nome_outorga.get(), data_outorga.get(), 
             emissor)
-
-
-def gerar_jpg_retransmitter():
-    """
-    Supera limitação de evocação de eventos do Tkinter, em que não é possível definir diretamente argumentos
-    da função associada a um widget. Obtém entradas e chama função que gera diploma.
-    """
-    # Obtém entradas de seleção
-    font_size, cor, nome, data, emissor = retornar_selecoes()
-
-    # Obtém a data do sys
-    data = obter_data_outorga()
-
-    # Gera diploma jpg, armazenado em 'imagens_geradas'
-    gerar_jpg(font_size, cor, nome, data, emissor)
 
 
 def desabilitar_checkboxes():
@@ -277,7 +269,7 @@ if __name__ == "__main__":
                     height=1,
                     text='Gerar .jpg',
                     font='Calibri 9 bold',
-                    command=gerar_jpg_retransmitter)
+                    command=gerar_jpg)
     botao.place(x=290, y=93)
 
     # Botao importar excel
@@ -305,7 +297,7 @@ if __name__ == "__main__":
     joaquim_c1.place(x=210, y=92)
 
     # ComboBox - Font Size
-    font_sizes = [25, 30, 35]
+    font_sizes = [20, 25, 30, 35]
     combo_fontes = ttk.Combobox(master=window, values=font_sizes, width=12)
     combo_fontes.place(x=420, y=13)
 
